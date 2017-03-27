@@ -25,7 +25,7 @@ from keras.layers import Flatten, Dense, Dropout
 from keras.layers import Input
 from keras.models import Model
 from keras import regularizers
-from keras.utils.visualize_util import plot
+#from keras.utils.visualize_util import plot
 from KerasLayers.Custom_layers import LRN2D
 
 # global constants
@@ -160,7 +160,7 @@ def check_print():
     model.summary()
 
     # Save a PNG of the Model Build
-    plot(model, to_file='./Model/CaffeNet.png')
+    #plot(model, to_file='./Model/CaffeNet.png')
 
     model.compile(optimizer='rmsprop',
                   loss='categorical_crossentropy')

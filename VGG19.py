@@ -24,7 +24,7 @@ from keras.layers import Convolution2D, MaxPooling2D, ZeroPadding2D
 from keras.layers import Flatten, Dense, Dropout
 from keras.layers import Input
 from keras.models import Model
-from keras.utils.visualize_util import plot
+#from keras.utils.visualize_util import plot
 
 
 def create_model():
@@ -138,7 +138,7 @@ def check_print():
     model.summary()
 
     # Save a PNG of the Model Build
-    plot(model, to_file='./Model/VGG19.png')
+    #plot(model, to_file='./Model/VGG19.png')
 
     model.compile(optimizer='rmsprop',
                   loss='categorical_crossentropy')

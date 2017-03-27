@@ -27,6 +27,10 @@ from GoogLeNet import create_model as GoogleNetModel
 from VGG19 import check_print as VGG19Modelcheck_print
 from VGG19 import create_model as VGG19Model
 
+import time
+from datetime import datetime
+
+
 model_choice = dict(AlexNet=AlexNetModel,
                     AlexNetOrig=AlexNetOrigModel,
                     CaffeNet=CaffeNetModel,
@@ -35,9 +39,9 @@ model_choice = dict(AlexNet=AlexNetModel,
 
 
 model_val = 'AlexNet'
-test_batch = False
+test_batch = True
 get_graph = False
-show_activation = True
+show_activation = False
 show_cmd_output = False
 
 
@@ -54,6 +58,7 @@ if not show_cmd_output:
     # Create a Keras Model - Functional API
     model = Model(input=img_input,
                   output=[x])
+    model.summary()
     model.compile(optimizer='rmsprop',
                   loss='categorical_crossentropy')
 
@@ -75,8 +80,23 @@ if test_batch:
     test_images = np.random.rand(batch_n, 3, 224, 224)
 
     # Get Model Prediction
-    output = model.predict(x=test_images,
-                           batch_size=batch_n)
+
+    test_iters = 50
+    warm_up_iters = 10
+    durations = []
+    for i in xrange(warm_up_iters + test_iters):
+        start_time = time.time()
+        output = model.predict(x=test_images,
+                               batch_size=batch_n)
+        duration = time.time() - start_time
+        if i > warm_up_iters:
+            if not i % 10:
+                print('%s: Iteration %d, time: %.2f ms' %
+                      (datetime.now(), i - warm_up_iters, duration * 1000))
+                durations.append(duration)
+    durations = np.array(durations)
+    print('%s: Average pass: %.2f ms ' %
+          (datetime.now(), durations.mean() * 1000))
 
     # Get the Softmax Prediction per Image
     print(np.argmax(output, axis=1))
@@ -151,7 +171,7 @@ if show_activation:
     """
 
     from keras import backend as K
-    import matplotlib.pyplot as plt
+    #import matplotlib.pyplot as plt
     from time import sleep
 
     n_layers = len(model.layers)
@@ -187,6 +207,7 @@ if show_activation:
 
     data = normalise_3d(data=layer_output[1, :, :, :])
 
+    '''
     for slice_v in range(10):
 
         H = data[slice_v, :, :]
@@ -207,6 +228,7 @@ if show_activation:
         plt.show()
 
         sleep(2)
+    '''
 
 if show_cmd_output:
     """
